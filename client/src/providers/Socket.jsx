@@ -10,13 +10,7 @@ export const useSocket = () => {
 export const SocketProvider = (props) => {
     const socket = useMemo(
         () => 
-            {
-                const URL =
-                    process.env.NODE_ENV === 'production'
-                    ? process.env.REACT_APP_BACKEND_URL
-                    : 'http://localhost:8001'
-                return io(URL)
-            },
+            io('https://video-call-server-thhf.onrender.com'),
             []
     )
     return(
