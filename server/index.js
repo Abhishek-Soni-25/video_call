@@ -1,15 +1,18 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const http = require('http')
 const { Server } = require('socket.io')
 require('dotenv').config()
+const cors = require('cors');
 
-const io = new Server({
-    cors: {
-        origin: process.env.FRONTEND_URL, 
-        methods: ['GET', 'POST']
-    }
-})
 const app = express()
+const server = http.createServer(app)
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ['GET', 'POST'],
+    credentials: true,
+}));
 
 app.use(bodyParser.json())
 
@@ -17,11 +20,21 @@ app.use('/test-route', (req,res) => {
     res.send("Running...")
 })
 
+const io = new Server(server, {
+    cors: {
+        origin: process.env.FRONTEND_URL, 
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+})
+
+
 const emailToSocketMapping = new Map()
 const socketToEmailMapping = new Map()
 
 io.on('connection', (socket) => {
     console.log('New Connection')
+
     socket.on('join-room', data => {
         const { emailId, roomId } = data
         console.log('User', emailId, 'Joined Room', roomId)
@@ -48,5 +61,4 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 8000
 
-app.listen(PORT, () => console.log(`Http server is running at port ${PORT}`))
-io.listen(8001)
+server.listen(PORT, () => console.log(`Server running at port ${PORT}`))
