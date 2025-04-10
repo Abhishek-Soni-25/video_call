@@ -29,8 +29,9 @@ const RoomPage = () =>{
     const handleCallAccepted = useCallback(async(data) => {
         const {ans} = data
         console.log('call got accepted')
+        console.log("Current signaling state before setting answer:", peer.signalingState);
         await setRemoteAnswer(ans)
-    },[setRemoteAnswer])
+    },[setRemoteAnswer, peer])
 
     const getUserMediaStream = useCallback(async() => {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -72,7 +73,7 @@ const RoomPage = () =>{
         <div className="room-page-container">
             <h1>Room Page</h1>
             <h4>Your are connected to {remoteEmailId}</h4>
-            <button onClick={e => sendStream(myStream)}>Send My Video</button>
+            <button onClick={() => myStream && sendStream(myStream)}>Send My Video</button>
             <ReactPlayer url={myStream} playing/>
             <ReactPlayer url={remoteStream} playing/>
         </div>

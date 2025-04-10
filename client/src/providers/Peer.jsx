@@ -24,6 +24,10 @@ export const PeerProvider = (props) => {
     }
 
     const setRemoteAnswer = async (ans) => {
+        if (peer.signalingState !== "have-local-offer") {
+            console.warn("❌ Cannot set answer, peer is in wrong state:", peer.signalingState)
+            return
+        }
         await peer.setRemoteDescription(ans)
     }
 
