@@ -1,5 +1,6 @@
 import React,{ useMemo } from "react";
 import { io } from "socket.io-client";
+require('dotenv').config()
 
 const SocketContex = React.createContext(null)
 
@@ -10,7 +11,13 @@ export const useSocket = () => {
 export const SocketProvider = (props) => {
     const socket = useMemo(
         () => 
-            io('http://localhost:8001'),
+            {
+                const URL =
+                    process.env.NODE_ENV === 'production'
+                    ? process.env.BACKEND_URL
+                    : 'http://localhost:8001'
+                return io(URL)
+            },
             []
     )
     return(

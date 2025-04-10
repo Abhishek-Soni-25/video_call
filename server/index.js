@@ -1,9 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const { Server } = require('socket.io')
+require('dotenv').config()
 
 const io = new Server({
-    cors: true
+    cors: {
+        origin: process.env.FRONTEND_URL, 
+        methods: ['GET', 'POST']
+    }
 })
 const app = express()
 
@@ -38,5 +42,7 @@ io.on('connection', (socket) => {
     })
 })
 
-app.listen(8000, () => console.log('Http server is running at port 8000'))
+const PORT = process.env.PORT || 8000
+
+app.listen(PORT, () => console.log(`Http server is running at port ${PORT}`))
 io.listen(8001)
