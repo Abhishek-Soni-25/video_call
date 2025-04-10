@@ -13,6 +13,10 @@ const app = express()
 
 app.use(bodyParser.json())
 
+app.use('/test-route', (req,res) => {
+    res.send("Running...")
+})
+
 const emailToSocketMapping = new Map()
 const socketToEmailMapping = new Map()
 
